@@ -3,7 +3,7 @@
     Page.Title = "Multi Record Query";
 
     var db = Database.Open("NWDB");
-    var querycommand = @"$SELECT CategoryID, CategoryName
+    var querycommand = @"SELECT CategoryID, CategoryName
          FROM Categories
          ORDER BY CategoryName";
     var ddlResults = db.Query(querycommand);
@@ -54,7 +54,7 @@
             //to pass parameters to the page you will add the data AFTER the page reference
             //syntax Response.Redirect("xxxxxpage.cshtml?label=value[&label=value.....]")
             //this uses the Get method of handling data WHICH MEANS visible and plain text
-            Response.Redirect("WebGridDemo.cshtml?" + categorylist);
+            Response.Redirect("WebGridDemo.cshtml?cid=" + categorylist);
         }
     }
 }
@@ -71,7 +71,7 @@
                     Here the propertname is the sql column title string.*@
                 @foreach (var item in ddlResults)
                 {
-                    if (item.CategoryID.ToString == categorylist)
+                    if (item.CategoryID.ToString() == categorylist)
                     {
                         <option value="@item.CategoryID" selected>@item[1]</option>
                     }

@@ -10,13 +10,29 @@
     //test: did a parameter actually exists
     if (string.IsNullOrEmpty(incomingParameter))
     {
-
+        Response.Redirect("MultiRecordQuery.cshtml");
     }
+
+    var db = Database.Open("NWDB");
+    var queryCommand = @"SELECT ProductID, ProductName, UnitPrice, QuantityPerUnit, Discontinued 
+                         FROM Products 
+                         WHERE CategoryID = @0";
+    var results = db.Query(queryCommand, incomingParameter);
+
+    //create an instance of the WebGrid
+    //notice the collection (results) is passed at the time of instantiation
+    var gridinstance = new WebGrid(results);
 }
 
 @section banner{
     <h1>Display a Collection of Records using WebGrid</h1>
 }
 
-<p>You passed the category id value of @incomingParameter</p>
+<div class="row">
+    <div class="offset-1">
+        <span style="font-size:x-large"><strong>Products for category @incomingParameter</strong></span>
+        @* use WebGrid *@
+        @gridinstance.GetHtml();
+    </div>
+</div>
 
