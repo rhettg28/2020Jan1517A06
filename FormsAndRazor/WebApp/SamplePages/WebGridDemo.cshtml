@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "WebGrid Demo";
+
+    //to receive incoming data passed as a parameter on the URL address
+    //  you will use Request.QueryString["xxxxx"] where xxxxx us the parameter label
+    //just like a control, if the parameter label does NOT exitst, QueryString will return a null
+    var incomingParameter = Request.QueryString["cid"];
+
+    //test: did a parameter actually exists
+    if (string.IsNullOrEmpty(incomingParameter))
+    {
+
+    }
+}
+
+@section banner{
+    <h1>Display a Collection of Records using WebGrid</h1>
+}
+
+<p>You passed the category id value of @incomingParameter</p>
+
