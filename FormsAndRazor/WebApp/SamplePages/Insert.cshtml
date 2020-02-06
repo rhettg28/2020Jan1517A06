@@ -12,6 +12,17 @@
     var unitsonorder = "";
     var reorderlevel = "";
     var discontinued = "";
+
+    //obtain the record collection (dataset) for the supplierid and categoryid
+    var db = Database.Open("NWDB");
+    var supplierquery = @"SELECT SupplierID, CompanyName
+                         FROM Suppliers 
+                         ORDER BY CompanyName";
+    var categoryquery = @"SELECT CategoryID, CategoryName
+                         FROM Categories 
+                         ORDER BY CategoryName";
+    var supplierlist = db.Query(supplierquery);
+    var categorylist = db.Query(categoryquery);
 }
 
 @section banner{
@@ -50,8 +61,8 @@
 
         //retrieve the data within the input controls
         productname = Request.Form["ProductName"];
-        supplierid = Request.Form["SupplierID"];
-        categoryid = Request.Form["CategoryID"];
+        supplierid = Request.Form["SupplierList"];  //input from web controls are strings
+        categoryid = Request.Form["CategoryList"];
         quantityperunit = Request.Form["QuantityPerUnit"];
         unitprice = Request.Form["UnitPrice"];
         unitsinstock = Request.Form["UnitsInStock"];
@@ -61,7 +72,7 @@
         try
         {
             //connect to the database
-            var db = Database.Open("NWDB");
+            //var db = Database.Open("NWDB");
 
             //create the sql insert command
             var insertcommand = @"INSERT INTO Products (ProductName, SupplierID, CategoryID, QuantityPerUnit,
@@ -72,8 +83,8 @@
             //execute the insert command
             //to execute the insert, update or delete command use .Execute()
             db.Execute(insertcommand, productname,
-                        string.IsNullOrEmpty(supplierid) ? null : supplierid,
-                        string.IsNullOrEmpty(categoryid) ? null : categoryid,
+                        supplierid.Equals("0") ? null : supplierid,
+                        categoryid.Equals("0") ? null : categoryid,
                         string.IsNullOrEmpty(quantityperunit) ? null : quantityperunit,
                         string.IsNullOrEmpty(unitprice) ? null : unitprice,
                         string.IsNullOrEmpty(unitsinstock) ? null : unitsinstock,
@@ -81,9 +92,11 @@
                         string.IsNullOrEmpty(reorderlevel) ? null : reorderlevel,
                         0);
 
+            //get the identity value of the last inserted record.
+            var x = db.GetLastInsertId();
             //display a success message
             <p class="col-md-12 text-center">
-                <span style="color:green"><strong>New Product Added</strong></span>
+                <span style="color:green"><strong>New Product Added @x</strong></span>
             </p>
         }
         catch (Exception ex)
@@ -116,11 +129,46 @@ else
             <input type="text" id="ProductName" name="ProductName"
                    placeholder="enter product name" title="Product Name"
                    value="@productname" /><br />
-            <input type="text" id="SupplierID" name="SupplierID"
-                   placeholder="enter supplier id" title="Supplier"
-                   value="@supplierid" /><br />
-            <input type="text" id="CategoryID" name="CategoryID"
-                   value="@categoryid" /><br />
+            <select id="SupplierList" name="SupplierList">
+                <option value="0" style="color:gray">select supplier...</option>
+                @foreach (var item in supplierlist)
+                {
+                    //when the select control is created and loaded by default
+                    //  the 1st option tag is shown as the selected option
+                    //the value attribute should be set to the data that is required
+                    //  by the record
+                    //the display text is only required by the user to make the selection
+                    //to retaun the previous selected value, you need to test
+                    //  the previous selected value against the current item that
+                    //  is being used to create the option line 
+                    //Remember: the previous value is a "string" 
+                    //Therefore: the current item value needs to also be a "string"
+                    //if the previous selected value is == to the current item then the
+                    //  option tag needs to have the attribute "selected" added to the tag
+                    if (supplierid == item.SupplierID.ToString())
+                    {
+                        <option value="@item.SupplierID" selected>@item.CompanyName</option>
+                    }
+                    else
+                    {
+                        <option value="@item.SupplierID">@item.CompanyName</option>
+                    }
+                }
+            </select><br />
+            <select id="CategoryList" name="CategoryList">
+                <option value="0" style="color:gray">select category...</option>
+                @foreach (var item in categorylist)
+                {
+                    if (categoryid == item.CategoryId.ToString())
+                    {
+                        <option value="@item.CategoryID" selected>@item.CategoryName</option>
+                    }
+                    else
+                    {
+                        <option value="@item.CategoryID">@item.CategoryName</option>
+                    }
+                }
+            </select><br />
             <input type="text" id="QuantityPerUnit" name="QuantityPerUnit"
                    value="@quantityperunit" /><br />
             <input type="text" id="UnitPrice" name="UnitPrice"
