@@ -54,11 +54,11 @@
     var queryProducts = db.QuerySingle(queryStatement, pid);
 
     Validation.Add("ProductName",
-          Validator.Required("Product name is a required field."),
-          Validator.StringLength(40, 1, "Product name is limited to 40 characters"));
+        Validator.Required("Product name is a required field."),
+        Validator.StringLength(40, 1, "Product name is limited to 40 characters"));
     //StringLength validation on a nullable field
     Validation.Add("QuantityPerUnit",
-          Validator.StringLength(20, 0, "Quantity per unit is limited to 20 characters"));
+        Validator.StringLength(20, 0, "Quantity per unit is limited to 20 characters"));
     //Datatype validation and Range validation
     Validation.Add("UnitPrice",
         Validator.Decimal("Unit Price must be a dollar amount"),
@@ -140,12 +140,12 @@
 
                 //command for logical delete
                 var updatecommand = @"UPDATE Products
-                                      SET Discontinued = @0,
+                                      SET Discontinued = @0
                                       WHERE ProductID = @1";
 
                 //execution for logical delete
                 //the return result of the execution is the number of row affected
-                int rowsAffected = db.Execute(updatecommand, 1, productid);
+                int rowsaffected = db.Execute(updatecommand, 1, productid);
 
                 //command for physical delete
                 //var deletecommand = @"DELETE Products
@@ -155,7 +155,7 @@
                 //the return result of the execution is the number of row affected
                 //int rowsAffected = db.Execute(updatecommand, 1, productid);
 
-                if (rowsAffected > 0)
+                if (rowsaffected > 0)
                 {
                     //row was found and changed
                     <p><span style="color:green">Product removed succesfully.</span></p>
@@ -217,20 +217,20 @@
 
                     //command
                     var updatecommand = @"UPDATE Products
-                                 SET ProductName = @0,
-                                     SupplierID = @1,
-                                     CategoryID = @2,
-                                     QuantityPerUnit = @3,
-                                     UnitPrice = @4,
-                                     UnitsInStock = @5,
-                                     UnitsOnOrder = @6,
-                                     ReorderLevel = @7,
-                                     Discontinued = @8,
-                               WHERE ProductID = @9";
+                                            SET ProductName = @0,
+                                                SupplierID = @1,
+                                                CategoryID = @2,
+                                                QuantityPerUnit = @3,
+                                                UnitPrice = @4,
+                                                UnitsInStock = @5,
+                                                UnitsOnOrder = @6,
+                                                ReorderLevel = @7,
+                                                Discontinued = @8
+                                            WHERE ProductID = @9";
 
                     //execution
                     //the return result of the execution is the number of row affected
-                    int rowsAffected = db.Execute(updatecommand, productname,
+                    int rowsaffected = db.Execute(updatecommand, productname,
                             supplierid.Equals("0") ? null : supplierid,
                             categoryid.Equals("0") ? null : categoryid,
                             string.IsNullOrEmpty(quantityperunit) ? null : quantityperunit,
@@ -239,7 +239,7 @@
                             string.IsNullOrEmpty(unitsonorder) ? null : unitsonorder,
                             string.IsNullOrEmpty(reorderlevel) ? null : reorderlevel,
                             discontinued, productid);
-                    if (rowsAffected > 0)
+                    if (rowsaffected > 0)
                     {
                         //row was found and changed
                         <p><span style="color:green">Product Updated.</span></p>
@@ -308,7 +308,7 @@ else //for IsPost
             </div>
             <div class="col-sm-6">
                 <input type="text" name="ProductID" value="@productid" readonly /><br />
-                <input type="text" name="ProductName" value="@productname" /><br />
+                <input type="text" name="ProductName" value="@productname" required/><br />
                 <select name="SupplierList">
                     <option value="0">select...</option>
                     @foreach (var acollectionrow in querySuppliers)
@@ -354,10 +354,22 @@ else //for IsPost
         </div>
         <div class="row">
             <div class="col-md-12 text-center">
+                @* to suppress validation on controls which a on click button event happens you can add the 
+                    attribute formnovalidate to the button*@
                 <button type="submit" name="theButton" id="theUpdate" class="btn btn-primary" value="update">Update</button>&nbsp;&nbsp;&nbsp;
-                <button type="submit" name="theButton" id="theDelete" class="btn btn-primary" value="delete">Delete</button>&nbsp;&nbsp;&nbsp;
-                <button type="submit" name="theButton" id="theCancel" class="btn btn-primary" value="cancel">Cancel</button>
+                <button type="submit" name="theButton" id="theDelete" class="btn btn-danger" value="delete" formnovalidate>Delete</button>&nbsp;&nbsp;&nbsp;
+                <button type="submit" name="theButton" id="theCancel" class="btn btn-light" value="cancel" formnovalidate>Cancel</button>
             </div>
         </div>
+        @* This javascript is used to ask for user confirmation on pressing a button; in this case
+            it is the Delete button
+           Notice that the name attribute which is used by Request.Form is identical whereas the
+            id attribute is unique which is used by javascript*@
+        <script type="text/javascript">
+            document.getElementById("theDelete").onclick = ConfirmDelete;
+            function ConfirmDelete() {
+                return confirm("Are you sure you want to discontinue @productname?")
+            }
+        </script>
     </form>
 </div>
