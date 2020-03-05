@@ -129,6 +129,7 @@
     <Content Include="SamplePages\CommonControls.aspx" />
     <Content Include="SamplePages\HelloWorld.aspx" />
     <Content Include="SamplePages\JobApp.aspx" />
+    <Content Include="SamplePages\MovieLibrary.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootwrap-freecode.js" />
@@ -214,6 +215,13 @@
     </Compile>
     <Compile Include="SamplePages\JobApp.aspx.designer.cs">
       <DependentUpon>JobApp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SamplePages\MovieLibrary.aspx.cs">
+      <DependentUpon>MovieLibrary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SamplePages\MovieLibrary.aspx.designer.cs">
+      <DependentUpon>MovieLibrary.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
