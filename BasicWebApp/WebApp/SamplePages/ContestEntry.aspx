@@ -17,6 +17,63 @@
         </div>
     </div>
   
+    <%-- samples of validation controls --%>
+    <asp:RequiredFieldValidator ID="RequiredFirstName" runat="server" ErrorMessage="First name is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="FirstName">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredLastName" runat="server" ErrorMessage="Last name is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="LastName">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredStreetAddress1" runat="server" ErrorMessage="Street address is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="StreetAddress1">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredCity" runat="server" ErrorMessage="City is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="City">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredPostalCode" runat="server" ErrorMessage="Postal code is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="PostalCode">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredEmailAddress" runat="server" ErrorMessage="Email address is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="EmailAddress">
+    </asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredCheckAnswer" runat="server" ErrorMessage="Check answered is required!"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="CheckAnswer">
+    </asp:RequiredFieldValidator>
+
+    <asp:RegularExpressionValidator ID="RegExPostalCode" runat="server" ErrorMessage="Invalid Postal Code (ex. T1T2T3)"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="PostalCode"
+         ValidationExpression="[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]">
+    </asp:RegularExpressionValidator>
+    <asp:RegularExpressionValidator ID="RegExEmailAddress" runat="server" ErrorMessage="Invalid email address"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="EmailAddress"
+         ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+    </asp:RegularExpressionValidator>
+
+    <%-- sample of using a range validation --%>
+    <asp:RangeValidator ID="RangeStreetAddress2" runat="server" ErrorMessage="Number must be between 0 and 100"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="StreetAddress2"
+         MaximumValue="100" MinimumValue="0" Type="Integer">
+    </asp:RangeValidator>
+
+    <%-- sample of using a compare validation --%>
+   <%-- <asp:CompareValidator ID="CompareCheckAnswer" runat="server" ErrorMessage="Skill testing value is not a number"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="CheckAnswer"
+         Operator="DataTypeCheck" Type="Integer"></asp:CompareValidator>--%>
+
+    <asp:CompareValidator ID="CompareCheckAnswer" runat="server" ErrorMessage="Skill testing value is incorrect"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="CheckAnswer"
+         Operator="Equal" ValueToCompare="15" Type="Integer"></asp:CompareValidator>
+
+    <%--<asp:CompareValidator ID="CompareCheckAnswer" runat="server" ErrorMessage="Skill testing value is not equal to Street Address 2"
+         Display="None" SetFocusOnError="true" ForeColor="IndianRed" ControlToValidate="CheckAnswer"
+         Operator="Equal" ControlToCompare="StreetAddress2" Type="Integer"></asp:CompareValidator>--%>
+
+    <%-- to display error messages --%>
+    <div class="row">
+        <asp:ValidationSummary ID="ValidationSummary1" runat="server" CssClass="alert alert-info"
+             HeaderText="Data entry errors. Examine your data to resolve the following concerns."/> 
+    </div>
+
     <div class="row">
         <div class ="col-md-6">
             <fieldset class="form-horizontal">
@@ -65,7 +122,7 @@
                      AssociatedControlID="EmailAddress"></asp:Label>
                 <asp:TextBox ID="EmailAddress" runat="server" 
                     ToolTip="Enter your email address"
-                     TextMode="Email"></asp:TextBox> 
+                    ></asp:TextBox> 
                   
               </fieldset>   
            <p>Note: You must agree to the contest terms in order to be entered.
@@ -79,17 +136,20 @@
                 Add 240<br />
                 Divide by 11<br />
                 Subtract 15<br />
-                <asp:TextBox ID="CheckAnswer" runat="server" ></asp:TextBox>
+                <asp:TextBox ID="CheckAnswer" runat="server"></asp:TextBox>
             </p>
         </div>
         <div class="col-md-6">   
             <div class="col-md-offset-2">
                 <p>
-                    <asp:Button ID="Submit" runat="server" Text="Submit" />&nbsp;&nbsp;
-                    <asp:Button ID="Clear" runat="server" Text="Clear" CausesValidation="true"  />
+                    <asp:Button ID="Submit" runat="server" Text="Submit" OnClick="Submit_Click" />&nbsp;&nbsp;
+                    <asp:Button ID="Clear" runat="server" Text="Clear" CausesValidation="true" OnClick="Clear_Click"  />
                 </p>
                 <asp:Label ID="Message" runat="server" ></asp:Label><br />
-            
+                <asp:GridView ID="EntryList" runat="server"
+                     CssClass="table table-striped table-hover" BorderStyle="None" GridLines="Horizontal">
+
+                </asp:GridView>
             </div>
         </div>
     </div>

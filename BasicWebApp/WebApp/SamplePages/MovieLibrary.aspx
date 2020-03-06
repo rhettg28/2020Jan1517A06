@@ -33,12 +33,12 @@
 
                 <asp:Label ID="Label5" runat="server" Text="Review (1-5 Stars)"
                      AssociatedControlID="Review"></asp:Label>
-                <asp:DropDownList ID="Review" runat="server">
+                <asp:DropDownList ID="Review" runat="server" Width="95px">
                     <asp:ListItem Value="1">1 Star</asp:ListItem>
-                    <asp:ListItem Value="2">2 Star</asp:ListItem>
-                    <asp:ListItem Value="3">3 Star</asp:ListItem>
-                    <asp:ListItem Value="4">4 Star</asp:ListItem>
-                    <asp:ListItem Value="5">5 Star</asp:ListItem>
+                    <asp:ListItem Value="2">2 Stars</asp:ListItem>
+                    <asp:ListItem Value="3">3 Stars</asp:ListItem>
+                    <asp:ListItem Value="4">4 Stars</asp:ListItem>
+                    <asp:ListItem Value="5">5 Stars</asp:ListItem>
                 </asp:DropDownList>
 
             </fieldset>
