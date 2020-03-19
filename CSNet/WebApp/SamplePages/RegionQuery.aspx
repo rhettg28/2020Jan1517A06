@@ -5,7 +5,7 @@
          <div class="col-md-6 text-right">
             <asp:Label ID="Label1" runat="server" Text="Select a Region:"></asp:Label>&nbsp;&nbsp;
             <asp:TextBox ID="RegionArg" runat="server"></asp:TextBox>&nbsp;&nbsp;
-            <asp:LinkButton ID="Fetch" runat="server">
+            <asp:LinkButton ID="Fetch" runat="server" OnClick="Fetch_Click">
                 <i class="fa fa-search"></i> Search
             </asp:LinkButton>
             <br /><br />
