@@ -24,7 +24,7 @@ namespace NorthwindSystem.Entities
         [StringLength(15, ErrorMessage = "Category name is limited to 15 characters")]
         public string CategoryName { get; set; }
 
-          public string Description
+        public string Description
         {
             get { return _Description; }
             set { _Description = string.IsNullOrEmpty(value) ? null : value; }
