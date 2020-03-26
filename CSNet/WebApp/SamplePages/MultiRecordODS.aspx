@@ -9,8 +9,12 @@
             <blockquote style="font-style: italic">
                 This illustrates a display of multiple records from a query.
                 The parameter will be submitted from either a drop down list
-                or a textbox. The resulting dataset is of the enity Product.
-                The output will be displayed in a customer GridView.
+                or a textbox. This example will use a dropdownlist load via an
+                ObjectDataSource. The resulting dataset is of the enity Product.
+                The output will be displayed in a product GridView. The Gridview
+                will be customized using Templates and web controls. The Gridview
+                will be limited to 3 rows of display. The Gridview will demonstrate
+                paging. The Page will demonstrate row selection from the GridView.
             </blockquote>
         </div>
     </div>
@@ -18,19 +22,22 @@
         <asp:Literal ID="Literal1" runat="server" Text="Categories:"></asp:Literal>
         &nbsp;&nbsp;
         <asp:DropDownList ID="CategoryList" runat="server" 
-            DataSourceID="CategoryListODS" 
-            DataTextField="CategoryName" 
-            DataValueField="CategoryID">           
+             DataSourceID="CategoryListODS" 
+             DataTextField="CategoryName" 
+             DataValueField="CategoryID"
+             AppendDataBoundItems="true">
+            <asp:ListItem Value="0">Select...</asp:ListItem>
         </asp:DropDownList>
         &nbsp;&nbsp;
-        <asp:LinkButton ID="FetchCategoryProducts" runat="server">Fetch</asp:LinkButton>
+        <asp:LinkButton ID="FetchCategoryProducts" runat="server" OnClick="FetchCategoryProducts_Click">Fetch</asp:LinkButton>
         <br />
     </div>
     
     <div class="row">
         <asp:GridView ID="ProductList" runat="server"
-            AutoGenerateColumns="False" OnSelectedIndexChanged="ProductList_SelectedIndexChanged"
-             >
+            AutoGenerateColumns="False" CssClass="table table-striped table-dark" GridLines="Horizontal" BorderStyle="None"
+            OnSelectedIndexChanged="ProductList_SelectedIndexChanged"
+            DataSourceID="ProductListODS" AllowPaging="True" PageSize="3">
               <Columns>
                 <asp:CommandField SelectText="View" ShowSelectButton="True"></asp:CommandField>
                 <asp:TemplateField HeaderText="ID">
@@ -74,8 +81,11 @@
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
-
-          
+          <EmptyDataTemplate>
+              <blockquote class="alert alert-danger">
+                  No Data available for selected category!
+              </blockquote>
+          </EmptyDataTemplate>
         </asp:GridView>
         <br /><br />
         <asp:Label ID="Message" runat="server" ></asp:Label>
@@ -84,5 +94,18 @@
         OldValuesParameterFormatString="original_{0}" 
         SelectMethod="Categories_List" 
         TypeName="NorthwindSystem.BLL.CategoryController">
+    </asp:ObjectDataSource>
+    <asp:ObjectDataSource ID="ProductListODS" runat="server" 
+        OldValuesParameterFormatString="original_{0}" 
+        SelectMethod="Products_FindByCategory" 
+        TypeName="NorthwindSystem.BLL.ProductController">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="CategoryList" 
+                PropertyName="SelectedValue" 
+                DefaultValue="0" 
+                Name="categoryid" 
+                Type="Int32">
+            </asp:ControlParameter>
+        </SelectParameters>
     </asp:ObjectDataSource>
 </asp:Content>
