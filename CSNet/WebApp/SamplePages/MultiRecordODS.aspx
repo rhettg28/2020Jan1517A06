@@ -39,30 +39,40 @@
             OnSelectedIndexChanged="ProductList_SelectedIndexChanged"
             DataSourceID="ProductListODS" AllowPaging="True" PageSize="3">
               <Columns>
-                <asp:CommandField SelectText="View" ShowSelectButton="True"></asp:CommandField>
-                <asp:TemplateField HeaderText="ID">
+                  <asp:CommandField SelectText="View" ShowSelectButton="True" ButtonType="Button"></asp:CommandField>
+<%--               <%-- <asp:TemplateField HeaderText="ID">
                     <ItemTemplate>
                         <asp:Label ID="ProductID" runat="server" 
-                            Text='<%# Eval("ProductID") %>'></asp:Label>
+                            Text='<%# Eval("ProductID") %>'></asp:Label> <%--Eval = one way binding to the control
                     </ItemTemplate>
-                </asp:TemplateField>
+                </asp:TemplateField>--%>
                 <asp:TemplateField HeaderText="Product">
                     <ItemTemplate>
+                        <asp:Label ID="ProductID" runat="server" Visible="false"
+                            Text='<%# Eval("ProductID") %>'></asp:Label>
                         <asp:Label ID="ProductName" runat="server" 
                             Text='<%# Eval("ProductName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Supplier">
                     <ItemTemplate>
-                       <asp:Label ID="SupplierID" runat="server" 
-                            Text='<%# Eval("SupplierID") %>'></asp:Label>
+                       <%--<asp:Label ID="SupplierID" runat="server" 
+                            Text='<%# Eval("SupplierID") %>'></asp:Label>--%>
+                        <asp:DropDownList ID="SupplierListGV" runat="server" DataSourceID="SupplierListGVODS" DataTextField="CompanyName" DataValueField="SupplierID"
+                             AppendDataBoundItems="true" SelectedValue='<%# Eval("SupplierID") %>' Enabled="false" ForeColor="Black">
+                             <asp:ListItem Value="0">Select...</asp:ListItem>
+                        </asp:DropDownList>
                     </ItemTemplate>
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Category">
                     <ItemTemplate>
-                         <asp:Label ID="CategoryID" runat="server" 
-                            Text='<%# Eval("CategoryID") %>'></asp:Label>
+                         <%--<asp:Label ID="CategoryID" runat="server" 
+                            Text='<%# Eval("CategoryID") %>'></asp:Label>--%>
+                        <asp:DropDownList ID="CategoryListGV" runat="server" DataSourceID="CategoryListODS" DataTextField="CategoryName" DataValueField="CategoryID"
+                             AppendDataBoundItems="true" SelectedValue='<%# Eval("CategoryID") %>' Enabled="false" ForeColor="Black">
+                            <asp:ListItem Value="0">Select...</asp:ListItem>
+                        </asp:DropDownList>
                     </ItemTemplate>
                     <ItemStyle HorizontalAlign="Center"></ItemStyle>
                 </asp:TemplateField>
@@ -107,5 +117,10 @@
                 Type="Int32">
             </asp:ControlParameter>
         </SelectParameters>
+    </asp:ObjectDataSource>
+    <asp:ObjectDataSource ID="SupplierListGVODS" runat="server" 
+        OldValuesParameterFormatString="original_{0}" 
+        SelectMethod="Suppliers_List" 
+        TypeName="NorthwindSystem.BLL.SupplierController">
     </asp:ObjectDataSource>
 </asp:Content>
