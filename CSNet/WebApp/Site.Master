@@ -16,6 +16,7 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="Content/myStyles.css" rel="stylesheet" />
 </head>
 <body>
     <form runat="server">
@@ -100,6 +101,14 @@
                                         href="~/SamplePages/MultiRecordODS.aspx"
                                         style="color:black" runat="server">
                                    ODS Query : Non-Pkey List</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/GridViewCodeBehindPaging.aspx"
+                                        style="color:black" runat="server">
+                                   GridView Paging and Filter Search</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ProductCRUD.aspx"
+                                        style="color:black" runat="server">
+                                   Product CRUD</a>
                             </div>
                          </li>
                          <li class="nav-item">
