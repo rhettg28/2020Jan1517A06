@@ -72,5 +72,37 @@ namespace NorthwindSystem.BLL
                 return results.ToList();
             }
         }
+
+        public int Products_Add(Product item)
+        {
+            //at some point in time you need to create an instance of your entity class
+            //this can be done either on the webpage OR within this method
+            //in this example the instance was created and loaded on the web page 
+
+            using (var context = new NorthwindSystemContext())
+            {
+                //step One
+                //Staging
+                //during staging the entity will be loaded with the instance to add to the database
+                //staging is done in current memory
+                //record is NOT yet physically added to the database 
+                context.Products.Add(item);
+
+                //step Two
+                //cause the physical addition of the staged record to the database
+                //if this statement fails, any changed attempted against the database are ROLLEDBACK
+                //  and an appropritiate error message is issued by the system
+                //if this statement is succesful, THEN the NEW primary key will be available for you
+                //  within the entity instance 
+                
+                //during this statement execution ANY validation in the entity class definition are
+                //  executed
+                context.SaveChanges();
+
+                //optionally
+                return item.ProductID;
+
+            }
+        }
     }
 }
