@@ -101,7 +101,7 @@ namespace WebApp.NorthwindPages
                         //load the corresponding individual fields
                         ProductID.Text = info.ProductID.ToString();
                         ProductName.Text = info.ProductName;
-                        if (info.SupplierID.HasValue)
+                        if (!info.SupplierID.HasValue)
                         {
                             SupplierList.SelectedIndex = 0;
                         }
@@ -281,6 +281,167 @@ namespace WebApp.NorthwindPages
                     }
                 }
             }
+        }
+
+        protected void UpdateProduct_Click(object sender, EventArgs e)
+        {
+            //executes your web page validation controls
+            if (Page.IsValid)
+            {
+                //any other required validation in code-behind that was not done
+                //  with the web page validation controls
+
+                //check to see if the pkey value is present
+                if (string.IsNullOrEmpty(ProductID.Text))
+                {
+                    errormsgs.Add("Look up a product to update.");
+                    LoadMessageDisplay(errormsgs, "alert alert-info");
+                }
+                else
+                {
+                    Product item = LoadProductInstance();
+
+                    //in addition to the basic load of the Product instance for an update one also
+                    //  must include the identity pKey value
+                    item.ProductID = int.Parse(ProductID.Text);
+
+                    //deal with a "Logical" delete property if one exists
+                    item.Discontinued = Discontinued.Checked;
+
+                    try
+                    {
+                        ProductController sysmgr = new ProductController();
+                        int rowsaffected = sysmgr.Products_Update(item);
+                        //check for success with or without actual changes to the database
+                        if (rowsaffected == 0)
+                        {
+                            //no abort BUT no rows changed 
+                            //this means that the record no longer is on the database
+                            errormsgs.Add("Product has been removed from the file.");
+                            LoadMessageDisplay(errormsgs, "alert alert-warning");
+                            ProductID.Text = "";
+                            BindProductList();  //make sure your selection list is up to date                           
+                        }
+                        else
+                        {
+                            //record was update
+                            errormsgs.Add("Product has been updated.");
+                            LoadMessageDisplay(errormsgs, "alert alert-info");
+                        }
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        UpdateException updateException = (UpdateException)ex.InnerException;
+                        if (updateException.InnerException != null)
+                        {
+                            errormsgs.Add(updateException.InnerException.Message.ToString());
+                        }
+                        else
+                        {
+                            errormsgs.Add(updateException.Message);
+                        }
+                        LoadMessageDisplay(errormsgs, "alert alert-danger");
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                        {
+                            foreach (var validationError in entityValidationErrors.ValidationErrors)
+                            {
+                                errormsgs.Add(validationError.ErrorMessage);
+                            }
+                        }
+                        LoadMessageDisplay(errormsgs, "alert alert-danger");
+                    }
+                    catch (Exception ex)
+                    {
+                        //general, catch "all"
+                        errormsgs.Add(GetInnerException(ex).ToString());
+                        LoadMessageDisplay(errormsgs, "alert alert-danger");
+                    }
+                }
+            }
+        }
+
+        protected void RemoveProduct_Click(object sender, EventArgs e)
+        {
+            //check to see if the pkey value is present
+            if (string.IsNullOrEmpty(ProductID.Text))
+            {
+                errormsgs.Add("Look up a product to discontinue.");
+                LoadMessageDisplay(errormsgs, "alert alert-info");
+            }
+            else
+            {
+                try
+                {
+                    ProductController sysmgr = new ProductController();
+                    int rowsaffected = sysmgr.Products_Delete(int.Parse(ProductID.Text));
+                    //check for success with or without actual changes to the database
+                    if (rowsaffected == 0)
+                    {
+                        //no abort BUT no rows changed 
+                        //this means that the record no longer is on the database
+                        errormsgs.Add("Product has been removed from the file.");
+                        LoadMessageDisplay(errormsgs, "alert alert-warning");
+                        ProductID.Text = "";
+                        BindProductList();  //make sure your selection list is up to date                           
+                    }
+                    else
+                    {
+                        //record was update
+                        errormsgs.Add("Product has been discontinued.");
+                        LoadMessageDisplay(errormsgs, "alert alert-info");
+                        Discontinued.Checked = true;
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    UpdateException updateException = (UpdateException)ex.InnerException;
+                    if (updateException.InnerException != null)
+                    {
+                        errormsgs.Add(updateException.InnerException.Message.ToString());
+                    }
+                    else
+                    {
+                        errormsgs.Add(updateException.Message);
+                    }
+                    LoadMessageDisplay(errormsgs, "alert alert-danger");
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in entityValidationErrors.ValidationErrors)
+                        {
+                            errormsgs.Add(validationError.ErrorMessage);
+                        }
+                    }
+                    LoadMessageDisplay(errormsgs, "alert alert-danger");
+                }
+                catch (Exception ex)
+                {
+                    //general, catch "all"
+                    errormsgs.Add(GetInnerException(ex).ToString());
+                    LoadMessageDisplay(errormsgs, "alert alert-danger");
+                }
+            }
+        }
+
+        protected Product LoadProductInstance()
+        {
+            Product item = new Product();
+            item.ProductName = ProductName.Text;
+            item.QuantityPerUnit = string.IsNullOrEmpty(QuantityPerUnit.Text) ? null : QuantityPerUnit.Text;
+            item.SupplierID = SupplierList.SelectedIndex == 0 ? (int?)null : int.Parse(SupplierList.SelectedValue);
+            item.CategoryID = CategoryList.SelectedIndex == 0 ? (int?)null : int.Parse(CategoryList.SelectedValue);
+            item.UnitPrice = string.IsNullOrEmpty(UnitPrice.Text) ? (decimal?)null : decimal.Parse(UnitPrice.Text);
+            item.UnitsInStock = string.IsNullOrEmpty(UnitsInStock.Text) ? (Int16?)null : Int16.Parse(UnitsInStock.Text);
+            item.UnitsOnOrder = string.IsNullOrEmpty(UnitsOnOrder.Text) ? (Int16?)null : Int16.Parse(UnitsOnOrder.Text);
+            item.ReorderLevel = string.IsNullOrEmpty(ReorderLevel.Text) ? (Int16?)null : Int16.Parse(ReorderLevel.Text);
+
+            //optionally you could handle the Discontinue in this method
+            return item;
         }
     }
 }

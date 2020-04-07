@@ -104,5 +104,47 @@ namespace NorthwindSystem.BLL
 
             }
         }
+
+        public int Products_Update(Product item)
+        {
+            using (var context = new NorthwindSystemContext())
+            {
+                //stage 
+                context.Entry(item).State = System.Data.Entity.EntityState.Modified;
+
+                //commit and return of the number rows affected
+                return context.SaveChanges();
+            }
+        }
+
+        public int Products_Delete(int productid)
+        {
+            using (var context = new NorthwindSystemContext())
+            {
+                //two types of deletes
+
+                ////physical: physical removal of the record from the database
+                ////get the record from the database by the pkey
+                //var exists = context.Products.Find(productid);
+                ////stage the removal
+                //context.Products.Remove(exists);
+                ////commit
+                //return context.SaveChanges();
+
+                //logical: one that sets a property of the class to a specified value to indicate
+                //         the record "logically" does not "exist" on the database anymore
+
+                var exists = context.Products.Find(productid);
+                //the setting of the property should be done within this method and NOT dependent
+                //  on the user remembering to do the action
+                exists.Discontinued = true;
+
+                //stage
+                context.Entry(exists).State = System.Data.Entity.EntityState.Modified;
+
+                //commit and return of the number rows affected
+                return context.SaveChanges();
+            }
+        }
     }
 }
