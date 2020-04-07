@@ -232,7 +232,7 @@ namespace WebApp.NorthwindPages
                         //in this case, you made decide to simply hard-code the value for Discontinued
                         theItem.Discontinued = false;
 
-                        //connect to the controller class that handles adding a product to thje database
+                        //connect to the controller class that handles adding a product to the database
                         ProductController sysmgr = new ProductController();
 
                         //call the appropriate method in the controller and receive any feedback 
